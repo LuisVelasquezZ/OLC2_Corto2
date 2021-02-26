@@ -1,4 +1,6 @@
 # Descripción
+Traductor a codigo de 3 direcciones construido con jison y node.js
+
 ## Reglas Semánticas
 ![image text](/img/F.png)
 * En la producción F al encontrar un terminal sintetiza el atributo "c3d" como cadena vacía y el lexema en el atributo "temp", si es una expresión entre parentesis sintetiza los atrigutos igual.
