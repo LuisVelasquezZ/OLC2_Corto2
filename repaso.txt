@@ -74,7 +74,46 @@ L5:
     instrucciones
 L3, L6:
 
+for(int x = 0; x < 3; x++){
+    instrucciones
+}
 
+x = 0
+L1:
+    if x < 3 goto L2
+    goto L3
+    L2:
+        instrucciones
+        t0 = x + 1
+        x = t0
+        goto L1
+L3:
+    
+x = 1 
+switch(x) {
+    case 1:
+        instrucciones
+    case 2:
+        instrucciones
+    default:
+        instrucciones
+}
+
+x = 1
+if x == 1 goto L1
+goto L2
+L1:
+    instrucciones
+    goto L3
+L2:
+    if x  == 2 goto L4
+    goto L5
+    L4:
+        instrucciones
+        goto L6
+    L5:
+        instrucciones
+L3, L6:
 
 
 

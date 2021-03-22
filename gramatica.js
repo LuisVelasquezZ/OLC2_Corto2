@@ -72,12 +72,12 @@
   }
 */
 var gramatica = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,5],$V1=[1,6],$V2=[1,7],$V3=[1,9],$V4=[1,10],$V5=[5,6,8,13],$V6=[1,11],$V7=[1,12],$V8=[5,6,8,9,11,13];
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,5],$V1=[1,10],$V2=[1,11],$V3=[1,12],$V4=[1,13],$V5=[1,14],$V6=[1,16],$V7=[5,6,23],$V8=[1,17],$V9=[5,6,8,23],$Va=[1,19],$Vb=[1,20],$Vc=[1,21],$Vd=[1,22],$Ve=[1,23],$Vf=[5,6,8,13,14,15,16,18,23],$Vg=[1,24],$Vh=[1,25],$Vi=[5,6,8,13,14,15,16,18,19,21,23];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"INICIO":3,"E":4,"EOF":5,"tk_mas":6,"T":7,"tk_menos":8,"tk_multiplicar":9,"F":10,"tk_division":11,"tk_pa":12,"tk_pc":13,"tk_entero":14,"tk_identificador":15,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",6:"tk_mas",8:"tk_menos",9:"tk_multiplicar",11:"tk_division",12:"tk_pa",13:"tk_pc",14:"tk_entero",15:"tk_identificador"},
-productions_: [0,[3,2],[4,3],[4,3],[4,1],[7,3],[7,3],[7,1],[10,3],[10,1],[10,1]],
+symbols_: {"error":2,"INICIO":3,"ELOGOR":4,"EOF":5,"tK_or":6,"ELOGAND":7,"tK_and":8,"ELOGNOT":9,"tK_not":10,"EREL":11,"E":12,"tk_mayor":13,"tk_igual":14,"tK_menor":15,"tk_mas":16,"T":17,"tk_menos":18,"tk_multiplicar":19,"F":20,"tk_division":21,"tk_pa":22,"tk_pc":23,"tk_entero":24,"tk_identificador":25,"tk_false":26,"tk_true":27,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",6:"tK_or",8:"tK_and",10:"tK_not",13:"tk_mayor",14:"tk_igual",15:"tK_menor",16:"tk_mas",18:"tk_menos",19:"tk_multiplicar",21:"tk_division",22:"tk_pa",23:"tk_pc",24:"tk_entero",25:"tk_identificador",26:"tk_false",27:"tk_true"},
+productions_: [0,[3,2],[4,3],[4,1],[7,3],[7,1],[9,2],[9,1],[11,3],[11,4],[11,3],[12,3],[12,3],[12,1],[17,3],[17,3],[17,1],[20,3],[20,3],[20,1],[20,1],[20,1],[20,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
@@ -87,10 +87,82 @@ case 1:
    
                     this.$ = $$[$0-1]
                     idTemporal = 0;
-                    return  this.$.c3d;
+                    return  {$$[$0-1].c3d, $$[$0-1].ev, $$[$0-1].ef};
                 
 break;
 case 2:
+
+                this.$ = {
+                    ev : $$[$0-2].ev + ", " + $$[$0].ev,
+                    ef : $$[$0].ef,
+                    c3d : $$[$0-2].c3d + $$[$0-2].ef + ":\n" + $$[$0].c3d   
+                }
+            
+break;
+case 3: case 5: case 7:
+
+                this.$ = {
+                    ev : $$[$0].ev,
+                    ef : $$[$0].ef,
+                    c3d : $$[$0].c3d
+                }
+            
+break;
+case 4:
+
+                this.$ = {
+                    ev : $$[$0].ev,
+                    ef : $$[$0-2].ef + ", " + $$[$0].ef,
+                    c3d : $$[$0-2].c3d + $$[$0-2].ev + ":\n" + $$[$0].c3d   
+                }
+            
+break;
+case 6:
+
+                this.$ = {
+                    ev : $$[$0].ef,
+                    ef : $$[$0].ev,
+                    c3d : $$[$0].c3d
+                }
+            
+break;
+case 8:
+
+                        var idEtiqueta1 = idEtiqueta + 1; 
+                            this.$ = {
+                                ev:"L"+idEtiqueta,
+                                ef:"L"+idEtiqueta1,
+                                c3d: $$[$0-2].c3d + $$[$0].c3d + "\n" + "if " + $$[$0-2].tmp + " > " + $$[$0].tmp+ " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta1
+                            }
+                            idEtiqueta += 2;
+                        
+break;
+case 9:
+
+                            var idEtiqueta1 = idEtiqueta + 1; 
+                            this.$ = {
+                                ev:"L"+idEtiqueta,
+                                ef:"L"+idEtiqueta1,
+                                c3d: $$[$0-3].c3d + $$[$0].c3d + "\n" + "if " + $$[$0-3].tmp + " == " + " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta1
+                            }
+                            idEtiqueta += 2;
+                        
+break;
+case 10:
+
+                            var idEtiqueta1 = idEtiqueta + 1; 
+                            this.$ = {
+                                ev:"L"+idEtiqueta,
+                                ef:"L"+idEtiqueta1,
+                                c3d: $$[$0-2].c3d + $$[$0].c3d + "\n" + "if " + $$[$0-2].tmp + " < " + $$[$0].tmp+ " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta1
+                            }
+                            idEtiqueta += 2;
+                        
+break;
+case 11:
 
                         this.$ = {
                                 tmp:"t" + idTemporal,
@@ -99,7 +171,7 @@ case 2:
                             idTemporal++;
                     
 break;
-case 3:
+case 12:
 
                         this.$ = {
                                 tmp:"t" + idTemporal,
@@ -108,12 +180,12 @@ case 3:
                             idTemporal++;
                     
 break;
-case 4:
+case 13:
 
                         this.$ = {tmp: $$[$0].tmp, c3d:$$[$0].c3d};
                     
 break;
-case 5:
+case 14:
 
                             this.$ = {
                                 tmp:"t" + idTemporal,
@@ -122,7 +194,7 @@ case 5:
                             idTemporal++;
                         
 break;
-case 6:
+case 15:
 
                             this.$ = {
                                 tmp:"t" + idTemporal,
@@ -131,25 +203,30 @@ case 6:
                             idTemporal++;
                         
 break;
-case 7:
+case 16:
  
                 this.$ = {tmp: $$[$0].tmp, c3d:$$[$0].c3d};
             
 break;
-case 8:
+case 17: case 18:
  
                             this.$ = {tmp: $$[$0-1].tmp, c3d:$$[$0-1].c3d};
                         
 break;
-case 9: case 10:
+case 19: case 20:
  
+                            this.$ = {tmp: $$[$0], c3d:""};
+                        
+break;
+case 21: case 22:
+
                             this.$ = {tmp: $$[$0], c3d:""};
                         
 break;
 }
 },
-table: [{3:1,4:2,7:3,10:4,12:$V0,14:$V1,15:$V2},{1:[3]},{5:[1,8],6:$V3,8:$V4},o($V5,[2,4],{9:$V6,11:$V7}),o($V8,[2,7]),{4:13,7:3,10:4,12:$V0,14:$V1,15:$V2},o($V8,[2,9]),o($V8,[2,10]),{1:[2,1]},{7:14,10:4,12:$V0,14:$V1,15:$V2},{7:15,10:4,12:$V0,14:$V1,15:$V2},{10:16,12:$V0,14:$V1,15:$V2},{10:17,12:$V0,14:$V1,15:$V2},{6:$V3,8:$V4,13:[1,18]},o($V5,[2,2],{9:$V6,11:$V7}),o($V5,[2,3],{9:$V6,11:$V7}),o($V8,[2,5]),o($V8,[2,6]),o($V8,[2,8])],
-defaultActions: {8:[2,1]},
+table: [{3:1,4:2,7:3,9:4,10:$V0,11:6,12:7,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{1:[3]},{5:[1,15],6:$V6},o($V7,[2,3],{8:$V8}),o($V9,[2,5]),{11:18,12:7,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},o($V9,[2,7]),{13:$Va,14:$Vb,15:$Vc,16:$Vd,18:$Ve},o($Vf,[2,13],{19:$Vg,21:$Vh}),o($Vi,[2,16]),{4:26,7:3,9:4,10:$V0,11:6,12:27,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},o($Vi,[2,19]),o($Vi,[2,20]),o($Vi,[2,21]),o($Vi,[2,22]),{1:[2,1]},{7:28,9:4,10:$V0,11:6,12:7,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{9:29,10:$V0,11:6,12:7,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},o($V9,[2,6]),{12:30,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{14:[1,31]},{12:32,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{17:33,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{17:34,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{20:35,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{20:36,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},{6:$V6,23:[1,37]},{13:$Va,14:$Vb,15:$Vc,16:$Vd,18:$Ve,23:[1,38]},o($V7,[2,2],{8:$V8}),o($V9,[2,4]),o($V9,[2,8],{16:$Vd,18:$Ve}),{12:39,17:8,20:9,22:$V1,24:$V2,25:$V3,26:$V4,27:$V5},o($V9,[2,10],{16:$Vd,18:$Ve}),o($Vf,[2,11],{19:$Vg,21:$Vh}),o($Vf,[2,12],{19:$Vg,21:$Vh}),o($Vi,[2,14]),o($Vi,[2,15]),o($Vi,[2,17]),o($Vi,[2,18]),o($V9,[2,9],{16:$Vd,18:$Ve})],
+defaultActions: {15:[2,1]},
 parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -298,6 +375,8 @@ parse: function parse(input) {
 }};
 
     let idTemporal = 0;
+    let idEtiqueta = 0;
+    let salidas = [];
 /* generated by jison-lex 0.3.4 */
 var lexer = (function(){
 var lexer = ({
@@ -626,32 +705,58 @@ options: {"case-sensitive":true},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0:  return 14;  
+case 0:  return 27;  
 break;
-case 1:  return 15;  
+case 1:  return 26;  
 break;
-case 2:  return 12;  
+case 2:  return 'tk_if';  
 break;
-case 3:  return 13;  
+case 3:  return 'tk_else';  
 break;
-case 4: return 6; 
+case 4:  return 24;  
 break;
-case 5: return 8;
+case 5:  return 25;  
 break;
-case 6: return 9;
+case 6:  return 22;  
 break;
-case 7: return 11
+case 7:  return 23;  
 break;
-case 8: /*se ignoran*/ 
+case 8: return 16; 
 break;
-case 9:  return 5;   
+case 9: return 18;
 break;
-case 10: tbl_error.push(['Error Lexico: ' + yy_.yytext , yy_.yylloc.first_line ,yy_.yylloc.first_column])   
+case 10: return 19;
+break;
+case 11: return 21;
+break;
+case 12: return 14;
+break;
+case 13: return 13;
+break;
+case 14: return 15;
+break;
+case 15: return 8;
+break;
+case 16: return 6;
+break;
+case 17: return 10;
+break;
+case 18: return 'tK_puntocoma';
+break;
+case 19: return 'tK_la';
+break;
+case 20: return 'tK_lc';
+break;
+case 21: /*se ignoran*/ 
+break;
+case 22:  return 5;   
+break;
+case 23: tbl_error.push(['Error Lexico: ' + yy_.yytext , yy_.yylloc.first_line ,yy_.yylloc.first_column])   
 break;
 }
 },
-rules: [/^(?:[0-9]+\b)/,/^(?:[a-zA-Z]([a-zA-Z0-9_])*)/,/^(?:\()/,/^(?:\))/,/^(?:\+)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?:[ \t\r\n\f]+)/,/^(?:$)/,/^(?:.)/],
-conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10],"inclusive":true}}
+rules: [/^(?:true\b)/,/^(?:false\b)/,/^(?:if\b)/,/^(?:else\b)/,/^(?:[0-9]+\b)/,/^(?:[a-zA-Z]([a-zA-Z0-9_])*)/,/^(?:\()/,/^(?:\))/,/^(?:\+)/,/^(?:-)/,/^(?:\*)/,/^(?:\/)/,/^(?:=)/,/^(?:>)/,/^(?:<)/,/^(?:&&)/,/^(?:\|\|)/,/^(?:!)/,/^(?:;)/,/^(?:\{)/,/^(?:\})/,/^(?:[ \t\r\n\f]+)/,/^(?:$)/,/^(?:.)/],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],"inclusive":true}}
 });
 return lexer;
 })();

@@ -13,7 +13,7 @@ function ejecutar(texto)
     }
 }
 
-console.log("Salida 1:");
+/*console.log("Salida 1:");
 ejecutar("(a + b) * (a + c)");
 console.log("\n");
 console.log("Salida 2:");
@@ -42,4 +42,7 @@ ejecutar("((7 + 9)/(((3 + 1) * (6 + 7) + 8) * 7) / 9) + 100");
 console.log("\n");
 console.log("Salida 10:");
 ejecutar("7 * 9 - 89 + 63");
+console.log("\n");*/
+console.log("Salida 2:");
+ejecutar("!(x<x)==(y>y)");
 console.log("\n");

@@ -19,15 +19,15 @@
 "-"                         %{ return 'tk_menos';%}
 "*"                         %{ return 'tk_multiplicar';%}
 "/"                         %{ return 'tk_division';%}
-"="                         %{ return 'tk_igual';}%
-">"                         %{ return 'tk_mayor';}%
-"<"                         %{ return 'tK_menor';}%
-"&&"                        %{ return 'tK_and';}%
-"||"                        %{ return 'tK_or';}%
-"!"                        %{ return 'tK_not';}%
-";"                         %{ return 'tK_puntocoma';}%
-"{"                         %{ return 'tK_la';}%
-"}"                         %{ return 'tK_lc';}%
+"="                         %{ return 'tk_igual';%}
+">"                         %{ return 'tk_mayor';%}
+"<"                         %{ return 'tK_menor';%}
+"&&"                        %{ return 'tK_and';%}
+"||"                        %{ return 'tK_or';%}
+"!"                         %{ return 'tK_not';%}
+";"                         %{ return 'tK_puntocoma';%}
+"{"                         %{ return 'tK_la';%}
+"}"                         %{ return 'tK_lc';%}
 [ \t\r\n\f]+         { /*se ignoran*/ }
 
 <<EOF>>     {  return 'EOF';   }
@@ -38,70 +38,22 @@
 /lex
 
 
+%left tK_and tK_or 
+%left tK_not
+%left tK_menor tk_mayor tk_igual
 %left tk_mas tk_menos
 %left tk_division tk_multiplicar
 
 
+
 %start INICIO
 %% 
-INICIO: ASIGNACION EOF   {   
+INICIO: ELOGOR EOF   {   
                     $$ = $1
                     idTemporal = 0;
-                    return  $$.c3d;
+                    return  {$1.c3d, $1.ev, $1.ef};
                 };
     
-INSTRUCCION :   INSTRUCCION WHILE
-                | INSTRUCCION ASIGNACION
-                | INSTRUCCION IF ELSE
-                | INSTRUCCION IF
-                | IF ELSE 
-                        {
-                            
-                        }
-                | IF tk_else tK_la INSTRUCCION tK_lc 
-                        {
-                                                    
-                        }
-                | IF 
-                        {
-                            
-                        }
-                | WHILE 
-                    {
-                        $$ = {
-
-                        }   
-                    }
-                | ASIGNACION 
-                    {
-                        $$ = {
-
-                        }
-                    };
-
-WHILE : while tk_pa ELOGOR tk_pc tK_la INSTRUCCION tK_lc
-            {
-                $$ = {
-                    er : "L"+idEtiqueta,
-                    c3d : "L"+idEtiqueta +": \n" + $3.c3d +  $3.ev + ":\n" + $5.c3d + "\n"+ "goto " 
-                    + "L"+idEtiqueta +"\n" + $3.ef + ":"   
-                }
-            };
-
-
-
-ASIGNACION: ASIGNACION tk_identificador tk_igual E tK_puntocoma 
-                        {
-                            $$ = {
-                                c3d: $1.c3d +  " " + $2 +" " + "=" + "t" + $4.tmp
-                            }
-                        }
-            | tk_identificador tk_igual E tK_puntocoma 
-                        {
-                            $$ = {
-                                c3d: $1.c3d +  " " + $2 +" " + "=" + "t" + $4.tmp
-                            }
-                        };
 
 ELOGOR  : ELOGOR tK_or ELOGAND 
             {
@@ -137,7 +89,7 @@ ELOGAND : ELOGAND tK_and ELOGNOT
                 }
             };
 
-ELOGNOT : tK_not ELOGNOT 
+ELOGNOT : tK_not EREL 
             {
                 $$ = {
                     ev : $2.ef,
@@ -154,32 +106,35 @@ ELOGNOT : tK_not ELOGNOT
                 }
             };
 
-EREL :  EREL tk_mayor E {
+EREL :  E tk_mayor E {
+                        var idEtiqueta1 = idEtiqueta + 1; 
                             $$ = {
                                 ev:"L"+idEtiqueta,
-                                ef:"L"+idEtiqueta+1,
-                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " > " + " goto L"+idEtiqueta 
-                                + "\n goto L" +idEtiqueta+1
+                                ef:"L"+idEtiqueta1,
+                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " > " + $3.tmp+ " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta1
                             }
                             idEtiqueta += 2;
                         }
-        | EREL tk_igual tk_igual E 
+        | E tk_igual tk_igual E 
                         {
+                            var idEtiqueta1 = idEtiqueta + 1; 
                             $$ = {
                                 ev:"L"+idEtiqueta,
-                                ef:"L"+idEtiqueta+1,
-                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " == " + " goto L"+idEtiqueta 
-                                + "\n goto L" +idEtiqueta+1
+                                ef:"L"+idEtiqueta1,
+                                c3d: $1.c3d + $4.c3d + "\n" + "if " + $1.tmp + " == " + " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta1
                             }
                             idEtiqueta += 2;
                         }  
-        | EREL tK_menor E   
+        | E tK_menor E   
                         {
+                            var idEtiqueta1 = idEtiqueta + 1; 
                             $$ = {
                                 ev:"L"+idEtiqueta,
-                                ef:"L"+idEtiqueta+1,
-                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " < " + " goto L"+idEtiqueta 
-                                + "\n goto L" +idEtiqueta+1
+                                ef:"L"+idEtiqueta1,
+                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " < " + $3.tmp+ " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta1
                             }
                             idEtiqueta += 2;
                         };
@@ -225,7 +180,10 @@ T : T tk_multiplicar F  {
             };
 
 
-F : tk_pa E tk_pc       { 
+F : tk_pa ELOGOR tk_pc       { 
+                            $$ = {tmp: $2.tmp, c3d:$2.c3d};
+                        }
+    |tk_pa E tk_pc       { 
                             $$ = {tmp: $2.tmp, c3d:$2.c3d};
                         }
     | tk_entero         { 
@@ -239,5 +197,5 @@ F : tk_pa E tk_pc       {
                         }
     | tk_true           {
                             $$ = {tmp: $1, c3d:""};
-                        }
+                        };
                 
