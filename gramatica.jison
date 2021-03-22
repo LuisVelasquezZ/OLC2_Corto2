@@ -24,6 +24,7 @@
 "<"                         %{ return 'tK_menor';}%
 "&&"                        %{ return 'tK_and';}%
 "||"                        %{ return 'tK_or';}%
+"!"                        %{ return 'tK_not';}%
 ";"                         %{ return 'tK_puntocoma';}%
 "{"                         %{ return 'tK_la';}%
 "}"                         %{ return 'tK_lc';}%
@@ -49,35 +50,44 @@ INICIO: ASIGNACION EOF   {
                     return  $$.c3d;
                 };
     
-INSTRUCCION :   INSTRUCCION IF ELSE
+INSTRUCCION :   INSTRUCCION WHILE
+                | INSTRUCCION ASIGNACION
+                | INSTRUCCION IF ELSE
                 | INSTRUCCION IF
-                | IF ELSE
-                | IF tk_else tK_la ASIGNACION tK_lc {}
-                | IF
+                | IF ELSE 
+                        {
+                            
+                        }
+                | IF tk_else tK_la INSTRUCCION tK_lc 
+                        {
+                                                    
+                        }
+                | IF 
+                        {
+                            
+                        }
+                | WHILE 
+                    {
+                        $$ = {
 
-IF : tk_if tk_pa EREL tk_pc tK_la ASIGNACION tK_lc
+                        }   
+                    }
+                | ASIGNACION 
+                    {
+                        $$ = {
+
+                        }
+                    };
+
+WHILE : while tk_pa ELOGOR tk_pc tK_la INSTRUCCION tK_lc
             {
                 $$ = {
-                    tmp: "L"+idEtiqueta++,
-                    c3d: "if " + $3.tmp + " goto L" + idEtiqueta +"\ngoto L" + idEtiqueta+ "\nL"+ idEtiqueta +":" + "\n"+ $6.c3d + "\n goto L"+ idEtiqueta + 2 + "\nL" +  ; 
-                    salida:idEtiqueta + 2; 
+                    er : "L"+idEtiqueta,
+                    c3d : "L"+idEtiqueta +": \n" + $3.c3d +  $3.ev + ":\n" + $5.c3d + "\n"+ "goto " 
+                    + "L"+idEtiqueta +"\n" + $3.ef + ":"   
                 }
-                idEtiqueta = idEtiqueta + 2;
-                salidas.push(idEtiqueta + 2);
             };
 
-ELSE :    ELSE tk_else IF {}
-        | ELSE tk_else tK_la ASIGNACION tK_lc {}
-        | tk_else IF 
-            {
-                $$ = {
-                    tmp: "L"+idEtiqueta,
-                    c3d: "if " + $3.tmp + " goto L" + idEtiqueta +"\ngoto L" + idEtiqueta+ + "\n"+ $6.c3d + "\n goto L"+ idEtiqueta + 2; 
-                    salida:idEtiqueta + 2; 
-                }
-                salidas.push(idEtiqueta + 2); 
-                idEtiqueta = idEtiqueta + 2;
-            };
 
 
 ASIGNACION: ASIGNACION tk_identificador tk_igual E tK_puntocoma 
@@ -93,31 +103,86 @@ ASIGNACION: ASIGNACION tk_identificador tk_igual E tK_puntocoma
                             }
                         };
 
-ELOG :  ELOG tK_and EREL {}
-        | ELOG tK_or EREL {}
-        | EREL {};
+ELOGOR  : ELOGOR tK_or ELOGAND 
+            {
+                $$ = {
+                    ev : $1.ev + ", " + $3.ev,
+                    ef : $3.ef,
+                    c3d : $1.c3d + $1.ef + ":\n" + $3.c3d   
+                }
+            }
+        | ELOGAND 
+            {
+                $$ = {
+                    ev : $1.ev,
+                    ef : $1.ef,
+                    c3d : $1.c3d
+                }
+            };
+
+ELOGAND : ELOGAND tK_and ELOGNOT 
+            {
+                $$ = {
+                    ev : $3.ev,
+                    ef : $1.ef + ", " + $3.ef,
+                    c3d : $1.c3d + $1.ev + ":\n" + $3.c3d   
+                }
+            }
+        | ELOGNOT 
+            {
+                $$ = {
+                    ev : $1.ev,
+                    ef : $1.ef,
+                    c3d : $1.c3d
+                }
+            };
+
+ELOGNOT : tK_not ELOGNOT 
+            {
+                $$ = {
+                    ev : $2.ef,
+                    ef : $2.ev,
+                    c3d : $2.c3d
+                }
+            }
+        | EREL 
+            {
+                $$ = {
+                    ev : $1.ev,
+                    ef : $1.ef,
+                    c3d : $1.c3d
+                }
+            };
 
 EREL :  EREL tk_mayor E {
-                                $$ = {
-                                    tmp:$1.tmp + ">" $3.tmp,
-                                    c3d: $1.c3d + $3.c3d + "\n" 
-                                }
+                            $$ = {
+                                ev:"L"+idEtiqueta,
+                                ef:"L"+idEtiqueta+1,
+                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " > " + " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta+1
                             }
-        | EREL tk_igual tk_igual E {
-                                        $$ = {
-                                            tmp:$1.tmp + "==" $4.tmp,
-                                            c3d: $1.c3d + $4.c3d + "\n" 
-                                        }
-                                    }  
-        | EREL tK_menor E   {
-                                $$ = {
-                                        tmp:$1.tmp + ">" $3.tmp,
-                                        c3d: $1.c3d + $3.c3d + "\n" 
-                                    }
+                            idEtiqueta += 2;
+                        }
+        | EREL tk_igual tk_igual E 
+                        {
+                            $$ = {
+                                ev:"L"+idEtiqueta,
+                                ef:"L"+idEtiqueta+1,
+                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " == " + " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta+1
                             }
-        | E {
-                $$ = {tmp: $1.tmp, c3d:$1.c3d};
-            }; 
+                            idEtiqueta += 2;
+                        }  
+        | EREL tK_menor E   
+                        {
+                            $$ = {
+                                ev:"L"+idEtiqueta,
+                                ef:"L"+idEtiqueta+1,
+                                c3d: $1.c3d + $3.c3d + "\n" + "if " + $1.tmp + " < " + " goto L"+idEtiqueta 
+                                + "\n goto L" +idEtiqueta+1
+                            }
+                            idEtiqueta += 2;
+                        };
 
 
 
