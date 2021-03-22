@@ -1,0 +1,65 @@
+S:  COND { print(COND.C3D)}
+
+COND:     COND "OR" COND 
+                {
+                    LV:COND1.LV + "," + COND2.LV,
+                    LF: COND2.LF,
+                    C3D:COND1.C3D
+                        + COND1.LF + ":"
+                        + COND2.C3D
+                }  
+        | COND "AND" COND 
+                {
+                    LV:COND2.LV,
+                    LF:COND1.LF + "," + COND2.LF,
+                    C3D:COND1.C3D 
+                        + COND1.LV +":"
+                        + COND2.C3D
+                }
+        | "NOT" COND 
+                {
+                    LV:REL.LF,
+                    LF:REL.LV,
+                    C3D:REL.C3D
+                }
+        | REL   {
+                    LV:REL.LV,
+                    LF:REL.LF,
+                    C3D:REL.C3D
+                }
+
+REL: F > F {    LV:new_etiqueta(), 
+                LF:new_etiqueta(), 
+                C3D: "if" + F1.val + ">" + F2.val + "goto" REL.LV
+                    +"goto" + REL.LF
+            }
+    |F < F {    LV:new_etiqueta(), 
+                LF:new_etiqueta(), 
+                C3D: "if" + F1.val + "<" + F2.val + "goto" REL.LV
+                    +"goto" + REL.LF
+            }
+    |F = F {    LV:new_etiqueta(), 
+                LF:new_etiqueta(), 
+                C3D: "if" + F1.val + "==" + F2.val + "goto" REL.LV
+                    +"goto" + REL.LF
+            }
+
+F:
+    |numero {F.val = numero.val}
+    |id     {F.val = numero.val}
+
+
+COND::= REL OR REL 
+    |   REL AND REL 
+    |   NOT REL 
+
+
+
+REL::= E < E 
+    |  E > E 
+    |  E ...
+
+
+E::= E + E 
+    | E - E 
+    |...

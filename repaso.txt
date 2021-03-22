@@ -1,0 +1,91 @@
+Operaciones aritmeticas
+
+5 + 2 
+
+t1 = 5 + 2
+
+
+5 - 6 + 4 * 9 
+t1 = 5 - 6
+t2 = 4 * 9
+t3 = t1 + t2
+
+5 < 6 
+
+if 5 < 6 goto L1      --LV: L1
+goto L2              --LF: L2    
+
+
+5 < 6 && 8 > 9       
+if 5 < 6 goto L1    --LV: L1  --LV: L3
+goto L2             --LF: L2  --LF: L2, L4
+L1 : 
+if 8 > 9 goto L3    --LV: L3
+goto L4             --LF: L4
+
+
+5 < 6 || 8 > 9
+if 5 < 6 goto L1    --LV: L1  --LV: L1,l3
+goto L2             --LF: L2  --LF: L4  
+L2 : 
+if 8 > 9 goto L3    --LV: L3
+goto L4             --LF: L4
+
+
+! 5 < 6
+if 5 < 6 goto L1   --LV: L1   --LV: L2
+goto L2             --LF: L2   --LF: L1
+
+
+while(5 < 6)
+{
+    instrucciones
+}
+
+L1:
+    if 5 < 6  goto L2
+    goto L3
+    L2:
+        instrucciones
+        goto L1
+L3:
+
+
+if(5 < 6){
+    instrucciones
+}else if(6 < 3){
+    instrucciones
+}else {
+    instrucciones
+}
+
+if 5 < 6 goto L1
+goto L2
+L1:
+    instrucciones
+    goto L3
+L2:
+    if 6 < 3 goto L4
+    goto L5
+    L4:
+        instrucciones
+        goto L6
+L5:
+    instrucciones
+L3, L6:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

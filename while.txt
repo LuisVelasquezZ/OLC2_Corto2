@@ -1,0 +1,65 @@
+L1:
+    if I < 10 goto L2
+    goto L3
+    L2:
+        t1 = I + 1
+        j = t1
+        L4:
+            if J < 10 goto L5
+            goto L6
+            L6:
+                t2 = B + i                                  
+                t3 = t2 * 5
+                if A = t3 goto L7   
+                goto L8
+                L8:                 --LV:L7,L9
+                                    --LF:L10
+                    t4 = I * 2
+                    if t4 < J goto L9
+                    goto L10
+                L7, L9:
+                    if I > J goto L11
+                    goto L12
+                    L12:                  --LV:L11,L13
+                                        --LF:L14
+                        if A < I goto L13
+                        goto L14
+                L11,L13:
+                    j = I                    
+                L10,L14:
+                    t5 = J + 1
+                    A = t5
+                goto L4
+            L5:
+                t6 = I + 1
+                I = t6 
+        goto L1
+L3:    
+
+
+
+(A = (B + I) * 5 OR I * 2 < J) AND (I > J OR A < I)
+t2 = B + i                                  
+t3 = t2 * 5
+if A = t3 goto L7   
+goto L8
+L8:                 --LV:L7,L9
+                    --LF:L10
+    t4 = I * 2
+    if t4 < J goto L9
+    goto L10
+L7, L9:
+    if I > J goto L11
+    goto L12
+    L12:                  --LV:L11,L13
+                          --LF:L14
+        if A < I goto L13
+        goto L14
+L11,L13:
+instrucciones
+L10,L14:
+
+
+
+
+
